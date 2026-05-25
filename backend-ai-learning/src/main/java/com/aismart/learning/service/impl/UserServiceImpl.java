@@ -1,84 +1,127 @@
 package com.aismart.learning.service.impl;
 
-import com.aismart.learning.service.base.UserService;
 import com.aismart.learning.dto.request.UserRegisterRequest;
+import com.aismart.learning.dto.request.ProfileUpdateRequest;
 import com.aismart.learning.dto.response.AuthResponse;
 import com.aismart.learning.entity.User;
+import com.aismart.learning.exception.AppRuntimeException;
 import com.aismart.learning.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.aismart.learning.service.base.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.UUID;
 
+/**
+ * Triển khai các nghiệp vụ liên quan đến người dùng.
+ */
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    
-    @Autowired
-    private UserRepository userRepository;
-    
+
+    private final UserRepository userRepository;
+
     @Override
-    public AuthResponse register(UserRegisterRequest request) {
-        // Check if user already exists
-        Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
-        if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("Email đã được sử dụng");
+    @Transactional
+    public AuthResponse updateProfile(Long userId, ProfileUpdateRequest request) {
+        log.info("Đang cập nhật hồ sơ cho userId: {}", userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppRuntimeException("Không tìm thấy người dùng với ID: " + userId));
+
+        user.setGrade(request.getGrade());
+        if (request.getSubjects() != null) {
+            user.setSubjects(String.join(",", request.getSubjects()));
         }
-        
-        // Create new user
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // TODO: implement password hashing
-        user.setFullName(request.getFullName());
-        
+        user.setCurrentLevel(request.getCurrentLevel());
+        user.setGoal(request.getGoal());
+        user.setOnboarded(true);
+
         User savedUser = userRepository.save(user);
-        
-        // Return auth response
-        AuthResponse response = new AuthResponse();
-        response.setUserId(savedUser.getId());
-        response.setEmail(savedUser.getEmail());
-        response.setFullName(savedUser.getFullName());
-        response.setUsername(savedUser.getUsername());
-        response.setToken(generateToken(savedUser.getId())); // TODO: implement JWT
-        response.setMessage("Đăng ký thành công");
-        
-        return response;
+        log.info("Cập nhật hồ sơ thành công cho userId: {}", savedUser.getId());
+        return buildAuthResponse(savedUser, "Cập nhật hồ sơ thành công");
     }
-    
+
     @Override
-    public AuthResponse login(String username, String password) {
-        // Find user by username or email
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) {
-            user = userRepository.findByEmail(username);
-        }
-        
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("Tên đăng nhập hoặc mật khẩu không đúng");
-        }
-        
-        User foundUser = user.get();
-        
-        // TODO: implement password verification (currently plain text comparison)
-        if (!foundUser.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Tên đăng nhập hoặc mật khẩu không đúng");
-        }
-        
-        // Return auth response
-        AuthResponse response = new AuthResponse();
-        response.setUserId(foundUser.getId());
-        response.setEmail(foundUser.getEmail());
-        response.setFullName(foundUser.getFullName());
-        response.setUsername(foundUser.getUsername());
-        response.setToken(generateToken(foundUser.getId())); // TODO: implement JWT
-        response.setMessage("Đăng nhập thành công");
-        
-        return response;
+    @Transactional
+    public AuthResponse register(UserRegisterRequest request) {
+        log.info("Đang xử lý đăng ký cho email: {}", request.getEmail());
+
+        validateEmailNotExists(request.getEmail());
+        validateUsernameNotExists(request.getUsername());
+
+        User user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(request.getPassword()) // TODO: hash mật khẩu bằng BCrypt
+                .fullName(request.getFullName())
+                .build();
+
+        User savedUser = userRepository.save(user);
+        log.info("Đăng ký thành công cho userId: {}", savedUser.getId());
+
+        return buildAuthResponse(savedUser, "Đăng ký thành công");
     }
-    
-    private String generateToken(Long userId) {
-        // TODO: implement JWT token generation
-        // For now, just return a simple token
-        return "token_" + UUID.randomUUID().toString();
+
+    @Override
+    @Transactional(readOnly = true)
+    public AuthResponse login(String usernameOrEmail, String password) {
+        log.info("Đang xử lý đăng nhập cho: {}", usernameOrEmail);
+
+        User user = findUserByUsernameOrEmail(usernameOrEmail);
+        validatePassword(password, user.getPassword());
+
+        log.info("Đăng nhập thành công cho userId: {}", user.getId());
+        return buildAuthResponse(user, "Đăng nhập thành công");
+    }
+
+    // ==================== Private helpers ====================
+
+    private void validateEmailNotExists(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new AppRuntimeException("Email '" + email + "' đã được sử dụng");
+        }
+    }
+
+    private void validateUsernameNotExists(String username) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new AppRuntimeException("Tên đăng nhập '" + username + "' đã được sử dụng");
+        }
+    }
+
+    private User findUserByUsernameOrEmail(String usernameOrEmail) {
+        return userRepository.findByUsername(usernameOrEmail)
+                .or(() -> userRepository.findByEmail(usernameOrEmail))
+                .orElseThrow(() -> new AppRuntimeException("Tên đăng nhập hoặc mật khẩu không đúng"));
+    }
+
+    private void validatePassword(String rawPassword, String storedPassword) {
+        // TODO: thay bằng BCrypt khi tích hợp Spring Security
+        if (!rawPassword.equals(storedPassword)) {
+            throw new AppRuntimeException("Tên đăng nhập hoặc mật khẩu không đúng");
+        }
+    }
+
+    private AuthResponse buildAuthResponse(User user, String message) {
+        return AuthResponse.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .token(generateSimpleToken()) // TODO: thay bằng JWT
+                .message(message)
+                .grade(user.getGrade())
+                .subjects(user.getSubjects())
+                .currentLevel(user.getCurrentLevel())
+                .goal(user.getGoal())
+                .onboarded(user.getOnboarded())
+                .build();
+    }
+
+    private String generateSimpleToken() {
+        // TODO: thay bằng JWT token khi tích hợp Spring Security
+        return "token_" + UUID.randomUUID();
     }
 }

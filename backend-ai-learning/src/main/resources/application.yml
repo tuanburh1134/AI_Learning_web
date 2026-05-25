@@ -1,14 +1,30 @@
 server:
   port: 8080
+
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:mysql://localhost:3306/AI_Learning?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
-    username: ${JDBC_DATABASE_USERNAME:root}
-    password: ${JDBC_DATABASE_PASSWORD:NewStrongPass!123}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${JDBC_DATABASE_URL:jdbc:h2:mem:ai_learning_dev;DB_CLOSE_DELAY=-1}
+    username: ${JDBC_DATABASE_USERNAME:sa}
+    password: ${JDBC_DATABASE_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+# Cấu hình AI provider (tích hợp sau)
 ai:
   provider: openai
-  apiKey: ${OPENAI_API_KEY:}
+  api-key: ${OPENAI_API_KEY:}
+
+# Google OAuth2
+google:
+  client-id: ${GOOGLE_CLIENT_ID:}
+  client-secret: ${GOOGLE_CLIENT_SECRET:}

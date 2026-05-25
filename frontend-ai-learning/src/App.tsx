@@ -1,33 +1,38 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom'
 import LoginPage from './features/auth/pages/LoginPage'
 import RegisterPage from './features/auth/pages/RegisterPage'
+import ProfilePage from './features/auth/pages/ProfilePage'
+import PlexusBackground from './components/PlexusBackground'
+import AppHeader from './components/AppHeader'
+import OnboardingModal from './components/OnboardingModal'
+import { useUserStore } from './store/useUserStore'
 
 function HomePage() {
+  const navigate = useNavigate()
+  const { user, setShowOnboardingModal } = useUserStore()
+
+  useEffect(() => {
+    if (user && !user.profile?.onboarded) {
+      setShowOnboardingModal(true)
+    }
+  }, [user, setShowOnboardingModal])
+
+  const handleCreatePlan = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (!user) {
+      navigate('/login')
+    } else {
+      setShowOnboardingModal(true)
+    }
+  }
+
   return (
     <div style={styles.page}>
-      <header style={styles.header}>
-        <div style={styles.brand}>
-          <div style={styles.logo} />
-          <div>
-            <div style={styles.brandTitle}>EduPlan AI</div>
-            <div style={styles.brandSubtitle}>Học Tập Thông Minh</div>
-          </div>
-        </div>
-
-        <nav style={styles.navLinks}>
-          <Link to="/" style={styles.navLink}>Trang Chủ</Link>
-          <a href="#plan" style={styles.navLink}>Tạo Kế Hoạch</a>
-          <a href="#test" style={styles.navLink}>Làm Kiểm Tra</a>
-          <a href="#library" style={styles.navLink}>Thư Viện</a>
-          <a href="#about" style={styles.navLink}>Về Chúng Tôi</a>
-        </nav>
-
-        <div style={styles.headerActions}>
-          <Link to="/login" style={styles.headerButton}>Đăng Nhập</Link>
-          <Link to="/register" style={styles.headerPrimary}>Bắt Đầu Ngay</Link>
-        </div>
-      </header>
+      <PlexusBackground />
+      <div style={styles.pageContent}>
+        <AppHeader />
+        <OnboardingModal />
 
       <section style={styles.hero}>
         <div style={styles.heroContent}>
@@ -38,8 +43,8 @@ function HomePage() {
           </p>
 
           <div style={styles.heroButtons}>
-            <Link to="#plan" style={styles.ctaButton}>Tạo Kế Hoạch Ngay</Link>
-            <Link to="#test" style={styles.secondaryButton}>Tạo Đề Kiểm Tra AI</Link>
+            <a href="#plan" onClick={handleCreatePlan} style={styles.ctaButton}>Tạo Kế Hoạch Ngay</a>
+            <a href="#test" onClick={handleCreatePlan} style={styles.secondaryButton}>Tạo Đề Kiểm Tra AI</a>
           </div>
         </div>
 
@@ -115,6 +120,7 @@ function HomePage() {
           <div style={styles.progressBar}><div style={{ ...styles.progressFill, width: '75%' }} /></div>
         </div>
       </section>
+      </div>
     </div>
   )
 }
@@ -122,74 +128,15 @@ function HomePage() {
 const styles = {
   page: {
     minHeight: '100vh',
-    paddingTop: '110px',
     background: '#eff4ff',
     color: '#1f2937',
     fontFamily: 'Inter, system-ui, sans-serif',
     lineHeight: 1.6,
-    boxSizing: 'border-box'
+    position: 'relative' as const,
   },
-  header: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '24px 40px',
-    background: '#cfdcff',
-    borderRadius: '0 0 24px 24px',
-    boxShadow: '0 20px 40px rgba(15, 23, 42, 0.12)',
-    position: 'sticky',
-    top: 0,
-    zIndex: 20
-  },
-  brand: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 14
-  },
-  logo: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    background: 'linear-gradient(135deg, #4f46e5, #22c55e)'
-  },
-  brandTitle: {
-    fontSize: 20,
-    fontWeight: 700
-  },
-  brandSubtitle: {
-    fontSize: 12,
-    color: '#4b5563'
-  },
-  navLinks: {
-    display: 'flex',
-    gap: 24,
-    alignItems: 'center'
-  },
-  navLink: {
-    color: '#334155',
-    textDecoration: 'none',
-    fontWeight: 500
-  },
-  headerActions: {
-    display: 'flex',
-    gap: 12,
-    alignItems: 'center'
-  },
-  headerButton: {
-    padding: '10px 16px',
-    borderRadius: 10,
-    border: '1px solid rgba(99, 102, 241, 0.2)',
-    color: '#374151',
-    textDecoration: 'none'
-  },
-  headerPrimary: {
-    padding: '10px 18px',
-    borderRadius: 10,
-    background: '#4338ca',
-    color: '#fff',
-    textDecoration: 'none',
-    fontWeight: 600
+  pageContent: {
+    position: 'relative' as const,
+    zIndex: 1,
   },
   hero: {
     maxWidth: 1180,
@@ -394,6 +341,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

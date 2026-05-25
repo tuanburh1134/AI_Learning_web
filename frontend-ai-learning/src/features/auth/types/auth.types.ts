@@ -15,6 +15,11 @@ export interface AuthResponse {
   userId: string
   fullName: string
   email: string
+  grade?: string
+  subjects?: string
+  currentLevel?: string
+  goal?: string
+  onboarded?: boolean
 }
 
 export interface AuthFormErrors {
