@@ -10,6 +10,7 @@ target/
 node_modules/
 dist/
 
+<<<<<<< HEAD
 # Env — KHÔNG BAO GIỜ commit file chứa API keys
 .env
 .env.local
@@ -27,6 +28,12 @@ application-local.yml
 application-local.yaml
 application-secret.yml
 application-secret.yaml
+=======
+# Env
+.env.local
+.env.local.*
+.env
+>>>>>>> origin/develop
 
 # IDE
 .idea/

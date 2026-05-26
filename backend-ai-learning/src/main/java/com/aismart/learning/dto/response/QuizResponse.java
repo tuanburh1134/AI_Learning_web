@@ -1,5 +1,6 @@
 package com.aismart.learning.dto.response;
 
+<<<<<<< HEAD
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,4 +23,13 @@ public class QuizResponse {
     private Integer gradeLevel;
     private String difficulty;
     private List<String> questions;
+=======
+import java.util.List;
+
+public class QuizResponse {
+    private Long id;
+    private String title;
+    private List<String> questions;
+    // getters/setters
+>>>>>>> origin/develop
 }

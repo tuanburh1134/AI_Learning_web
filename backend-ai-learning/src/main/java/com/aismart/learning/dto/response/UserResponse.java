@@ -1,5 +1,6 @@
 package com.aismart.learning.dto.response;
 
+<<<<<<< HEAD
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,4 +19,11 @@ public class UserResponse {
     private String username;
     private String email;
     private String fullName;
+=======
+public class UserResponse {
+    private Long id;
+    private String username;
+    private String fullName;
+    // getters/setters
+>>>>>>> origin/develop
 }

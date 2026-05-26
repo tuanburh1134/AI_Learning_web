@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { AuthResponse } from '../features/auth/types/auth.types'
@@ -80,3 +81,11 @@ export const useUserStore = create<UserStore>()(
   )
 )
 
+=======
+import create from 'zustand'
+
+export const useUserStore = create((set:any) => ({
+  user: null,
+  setUser: (u:any) => set({ user: u })
+}))
+>>>>>>> origin/develop

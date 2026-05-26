@@ -1,5 +1,6 @@
 package com.aismart.learning.dto.request;
 
+<<<<<<< HEAD
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -32,4 +33,13 @@ public class GenerateQuizRequest {
     @Min(value = 1, message = "Số câu hỏi phải ít nhất là 1")
     @Max(value = 50, message = "Số câu hỏi không được vượt quá 50")
     private Integer questionCount;
+=======
+public class GenerateQuizRequest {
+    private Integer gradeLevel; // lớp mấy
+    private String subject;
+    private String difficulty; // basic/advanced
+    private String goal; // "mất gốc" | "ôn tập" | "vượt"
+    private Integer questionCount;
+    // getters/setters
+>>>>>>> origin/develop
 }
