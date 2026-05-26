@@ -3,10 +3,21 @@ import { BrowserRouter, Routes, Route, Navigate, Link, useNavigate } from 'react
 import LoginPage from './features/auth/pages/LoginPage'
 import RegisterPage from './features/auth/pages/RegisterPage'
 import ProfilePage from './features/auth/pages/ProfilePage'
+import RoadmapPage from './features/roadmap/pages/RoadmapPage'
+import LessonPage from './features/lesson/pages/LessonPage'
 import PlexusBackground from './components/PlexusBackground'
 import AppHeader from './components/AppHeader'
 import OnboardingModal from './components/OnboardingModal'
 import { useUserStore } from './store/useUserStore'
+
+// Global animation for spinner (used in LessonPage)
+const globalCss = `@keyframes spin { to { transform: rotate(360deg); } }`
+if (!document.getElementById('global-keyframes')) {
+  const s = document.createElement('style')
+  s.id = 'global-keyframes'
+  s.innerHTML = globalCss
+  document.head.appendChild(s)
+}
 
 function HomePage() {
   const navigate = useNavigate()
@@ -342,6 +353,8 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/roadmap" element={<RoadmapPage />} />
+        <Route path="/lesson/:subjectName/:lessonId" element={<LessonPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useUserStore, UserProfile } from '../store/useUserStore'
 import { AuthService } from '../features/auth/services/authApi'
+import { generateRoadmapForSubjects } from '../services/aiRoadmapService'
+import { useNavigate } from 'react-router-dom'
 
 const MODAL_CSS = `
   .ob-overlay {
@@ -256,7 +258,10 @@ const GOALS = [
 ]
 
 export default function OnboardingModal() {
-  const { user, showOnboardingModal, setShowOnboardingModal, updateProfile, setUser } = useUserStore()
+  const { user, showOnboardingModal, setShowOnboardingModal, updateProfile, setUser, setRoadmaps } = useUserStore()
+  const navigate = useNavigate()
+  const [generatedSubjectsCount, setGeneratedSubjectsCount] = useState(0)
+  const [aiError, setAiError] = useState<string | null>(null)
 
   const [step, setStep] = useState(1) // 1: Lớp/Môn, 2: Trình độ/Mục tiêu, 3: Loading AI Roadmap, 4: Done
   const [grade, setGrade] = useState<string>('')
@@ -295,35 +300,44 @@ export default function OnboardingModal() {
     return () => clearInterval(timer)
   }, [step])
 
-  // Save profile and trigger success step
+  // Save profile and trigger AI roadmap generation
   const handleSaveProfile = async () => {
     setStep(3)
+    setAiError(null)
+    setGeneratedSubjectsCount(0)
+
     try {
-      const updatedUser = await AuthService.updateProfile(user.userId, {
+      // 1. Lưu profile lên server (song song với AI)
+      const profilePromise = AuthService.updateProfile(user.userId, {
         grade,
         subjects: selectedSubjects,
         currentLevel: level,
         goal
+      }).then(setUser).catch(err => {
+        console.warn('Lưu profile server thất bại, dùng local:', err)
+        updateProfile({ grade, subjects: selectedSubjects, currentLevel: level, goal, onboarded: true })
       })
 
-      // Simulate premium AI Generation for 4.2 seconds
-      setTimeout(() => {
-        setUser(updatedUser)
-        setStep(4)
-      }, 4200)
+      // 2. Gọi AI sinh lộ trình cho từng môn
+      const aiPromise = generateRoadmapForSubjects(
+        grade,
+        selectedSubjects,
+        level,
+        goal
+      ).then(roadmaps => {
+        setRoadmaps(roadmaps)
+        setGeneratedSubjectsCount(Object.keys(roadmaps).length)
+      }).catch(err => {
+        console.error('AI thất bại:', err)
+        setAiError('AI không phản hồi, bạn có thể thử lại sau.')
+      })
+
+      // 3. Chờ cả 2 hoàn thành
+      await Promise.all([profilePromise, aiPromise])
+      setStep(4)
     } catch (err) {
-      console.error("Lỗi khi lưu profile lên database, fallback sang offline:", err)
-      // Fallback local update
-      setTimeout(() => {
-        updateProfile({
-          grade,
-          subjects: selectedSubjects,
-          currentLevel: level,
-          goal,
-          onboarded: true
-        })
-        setStep(4)
-      }, 4200)
+      console.error('Lỗi nghiêm trọng:', err)
+      setStep(4)
     }
   }
 
@@ -475,22 +489,55 @@ export default function OnboardingModal() {
 
           {step === 4 && (
             <div className="ob-loading-sec">
-              <div className="ob-confetti-sparkle">🏆</div>
+              <div className="ob-confetti-sparkle">{aiError ? '⚠️' : '🏆'}</div>
               <div>
-                <h3 className="ob-loader-text-main" style={{ color: '#10b981', fontSize: 22 }}>
-                  Thiết Lập Lộ Trình Thành Công!
+                <h3 className="ob-loader-text-main" style={{ color: aiError ? '#f59e0b' : '#10b981', fontSize: 22 }}>
+                  {aiError ? 'Đã lưu hồ sơ!' : 'Lộ Trình AI Đã Sẵn Sàng!'}
                 </h3>
-                <p className="ob-loader-text-sub" style={{ marginTop: 10, maxWidth: 440 }}>
-                  Chào mừng <strong>{user.fullName || user.username}</strong>! Lộ trình AI dành cho <strong>{grade}</strong> gồm các môn <strong>{selectedSubjects.join(', ')}</strong> đã được lưu thành công.
+                <p className="ob-loader-text-sub" style={{ marginTop: 10, maxWidth: 460 }}>
+                  {aiError
+                    ? <span style={{ color: '#f59e0b' }}>{aiError}</span>
+                    : <>
+                        AI đã tạo <strong>{generatedSubjectsCount} lộ trình học tập</strong> cá nhân hóa cho <strong>{user.fullName || user.username}</strong>.<br/>
+                        Gồm các môn: <strong>{selectedSubjects.join(', ')}</strong> — <strong>{grade}</strong>.
+                      </>
+                  }
                 </p>
+
+                {/* Preview stats */}
+                {!aiError && (
+                  <div style={{
+                    display: 'flex', gap: 16, justifyContent: 'center', marginTop: 20, flexWrap: 'wrap'
+                  }}>
+                    {selectedSubjects.map(s => (
+                      <div key={s} style={{
+                        background: '#f0fdf4', border: '1px solid #bbf7d0',
+                        borderRadius: 12, padding: '10px 16px', textAlign: 'center'
+                      }}>
+                        <div style={{ fontSize: 20 }}>📘</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#166534' }}>{s}</div>
+                        <div style={{ fontSize: 11, color: '#15803d' }}>Lộ trình đã sẵn sàng</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <button 
-                className="ob-btn ob-btn-primary" 
-                onClick={handleClose}
-                style={{ marginTop: 12, padding: '14px 40px' }}
-              >
-                Khám Phá Kế Hoạch AI Ngay 🚀
-              </button>
+
+              <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+                <button
+                  className="ob-btn ob-btn-secondary"
+                  onClick={handleClose}
+                >
+                  Về trang chủ
+                </button>
+                <button
+                  className="ob-btn ob-btn-primary"
+                  onClick={() => { handleClose(); navigate('/roadmap') }}
+                  style={{ background: 'linear-gradient(135deg, #4f46e5, #10b981)', padding: '14px 32px' }}
+                >
+                  Xem Lộ Trình Học Tập 🚀
+                </button>
+              </div>
             </div>
           )}
         </div>

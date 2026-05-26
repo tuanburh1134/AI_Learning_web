@@ -10,10 +10,23 @@ target/
 node_modules/
 dist/
 
-# Env
+# Env — KHÔNG BAO GIỜ commit file chứa API keys
+.env
 .env.local
 .env.local.*
-.env
+.env.*.local
+.env.development
+.env.development.local
+.env.production
+.env.production.local
+.env.test
+.env.test.local
+
+# Spring Boot secrets
+application-local.yml
+application-local.yaml
+application-secret.yml
+application-secret.yaml
 
 # IDE
 .idea/

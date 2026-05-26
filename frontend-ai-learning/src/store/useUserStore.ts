@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { AuthResponse } from '../features/auth/types/auth.types'
+import { RoadmapMap } from '../types/roadmap.types'
 
 export interface UserProfile {
   grade?: string
@@ -22,9 +23,12 @@ export interface UserInfo {
 interface UserStore {
   user: UserInfo | null
   showOnboardingModal: boolean
+  roadmaps: RoadmapMap          // key = tên môn, value = RoadmapData
   setUser: (u: AuthResponse) => void
   setShowOnboardingModal: (show: boolean) => void
   updateProfile: (profile: UserProfile) => void
+  setRoadmaps: (maps: RoadmapMap) => void
+  clearRoadmaps: () => void
   logout: () => void
 }
 
@@ -33,6 +37,7 @@ export const useUserStore = create<UserStore>()(
     (set) => ({
       user: null,
       showOnboardingModal: false,
+      roadmaps: {},
       setUser: (u) => {
         const profile = u.onboarded ? {
           grade: u.grade,
@@ -67,8 +72,11 @@ export const useUserStore = create<UserStore>()(
           }
         }
       }),
-      logout: () => set({ user: null, showOnboardingModal: false }),
+      setRoadmaps: (maps) => set({ roadmaps: maps }),
+      clearRoadmaps: () => set({ roadmaps: {} }),
+      logout: () => set({ user: null, showOnboardingModal: false, roadmaps: {} }),
     }),
     { name: 'ai-learning-user' }
   )
 )
+
