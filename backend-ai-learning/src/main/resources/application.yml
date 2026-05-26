@@ -1,6 +1,5 @@
 server:
   port: 8080
-<<<<<<< HEAD
 
 spring:
   datasource:
@@ -29,16 +28,3 @@ ai:
 google:
   client-id: ${GOOGLE_CLIENT_ID:}
   client-secret: ${GOOGLE_CLIENT_SECRET:}
-=======
-spring:
-  datasource:
-    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
-  jpa:
-    hibernate:
-      ddl-auto: update
-ai:
-  provider: openai
-  apiKey: ${OPENAI_API_KEY:}
->>>>>>> origin/develop

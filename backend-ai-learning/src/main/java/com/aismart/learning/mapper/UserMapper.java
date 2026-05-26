@@ -1,6 +1,5 @@
 package com.aismart.learning.mapper;
 
-<<<<<<< HEAD
 import com.aismart.learning.dto.response.UserResponse;
 import com.aismart.learning.entity.User;
 import org.mapstruct.Mapper;
@@ -16,8 +15,4 @@ public interface UserMapper {
      * Chuyển User entity sang UserResponse DTO (loại bỏ password).
      */
     UserResponse toUserResponse(User user);
-=======
-public interface UserMapper {
-    // TODO: MapStruct mapper between User entity and DTOs
->>>>>>> origin/develop
 }

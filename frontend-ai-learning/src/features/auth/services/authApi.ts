@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { API_URL } from '@/config/env'
-<<<<<<< HEAD
 import { LoginRequest, RegisterRequest, AuthResponse } from '../types/auth.types'
 
 class AuthServiceClass {
@@ -31,8 +30,3 @@ class AuthServiceClass {
 }
 
 export const AuthService = new AuthServiceClass()
-=======
-
-export const login = (payload:any) => axios.post(`${API_URL}/auth/login`, payload)
-export const register = (payload:any) => axios.post(`${API_URL}/auth/register`, payload)
->>>>>>> origin/develop

@@ -1,6 +1,5 @@
 package com.aismart.learning.exception;
 
-<<<<<<< HEAD
 import com.aismart.learning.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -75,11 +74,4 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("Đã có lỗi xảy ra, vui lòng thử lại sau"));
     }
-=======
-import org.springframework.web.bind.annotation.ControllerAdvice;
-
-@ControllerAdvice
-public class GlobalExceptionHandler {
-    // TODO: handle exceptions and return standardized responses
->>>>>>> origin/develop
 }
