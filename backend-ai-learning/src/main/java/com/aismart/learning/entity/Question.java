@@ -1,6 +1,5 @@
 package com.aismart.learning.entity;
 
-<<<<<<< HEAD
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,9 +28,4 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
-=======
-public class Question {
-    private String content;
-    private String answer;
->>>>>>> origin/develop
 }

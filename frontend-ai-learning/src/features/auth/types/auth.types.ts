@@ -13,16 +13,15 @@ export interface RegisterRequest {
 export interface AuthResponse {
   token: string
   userId: string
+  username: string
   fullName: string
   email: string
-<<<<<<< HEAD
   grade?: string
   subjects?: string
   currentLevel?: string
   goal?: string
   onboarded?: boolean
-=======
->>>>>>> origin/develop
+  message?: string
 }
 
 export interface AuthFormErrors {

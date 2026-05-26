@@ -1,6 +1,5 @@
 package com.aismart.learning.controller;
 
-<<<<<<< HEAD
 import com.aismart.learning.dto.request.GoogleAuthRequest;
 import com.aismart.learning.dto.request.UserRegisterRequest;
 import com.aismart.learning.dto.request.ProfileUpdateRequest;
@@ -86,11 +85,4 @@ public class AuthController {
         AuthResponse response = userService.updateProfile(userId, request);
         return ResponseEntity.ok(ApiResponse.success("Cập nhật hồ sơ thành công", response));
     }
-=======
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-public class AuthController {
-    // TODO: Authentication endpoints (register/login)
->>>>>>> origin/develop
 }

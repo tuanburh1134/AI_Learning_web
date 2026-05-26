@@ -1,6 +1,5 @@
 package com.aismart.learning.dto.request;
 
-<<<<<<< HEAD
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -27,11 +26,4 @@ public class UserRegisterRequest {
     private String password;
 
     private String fullName;
-=======
-public class UserRegisterRequest {
-    private String username;
-    private String password;
-    private String fullName;
-    // getters/setters
->>>>>>> origin/develop
 }

@@ -1,7 +1,6 @@
 package com.aismart.learning.entity;
 
 import jakarta.persistence.*;
-<<<<<<< HEAD
 import lombok.*;
 
 import java.util.ArrayList;
@@ -42,15 +41,4 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Question> questions = new ArrayList<>();
-=======
-import java.util.List;
-
-@Entity
-public class Quiz {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    @ElementCollection
-    private List<String> questions;
->>>>>>> origin/develop
 }
