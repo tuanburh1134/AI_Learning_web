@@ -1,6 +1,5 @@
 package com.aismart.learning.controller;
 
-<<<<<<< HEAD
 import com.aismart.learning.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +27,4 @@ public class RoadmapController {
         // TODO: Tích hợp AI để tạo lộ trình cá nhân hóa
         return ResponseEntity.ok(ApiResponse.success("Tính năng lộ trình đang được phát triển"));
     }
-=======
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-public class RoadmapController {
-    // TODO: Endpoints to provide learning roadmaps
->>>>>>> origin/develop
 }

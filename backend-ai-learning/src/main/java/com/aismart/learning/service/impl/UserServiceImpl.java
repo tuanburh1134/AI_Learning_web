@@ -1,6 +1,5 @@
 package com.aismart.learning.service.impl;
 
-<<<<<<< HEAD
 import com.aismart.learning.dto.request.UserRegisterRequest;
 import com.aismart.learning.dto.request.ProfileUpdateRequest;
 import com.aismart.learning.dto.response.AuthResponse;
@@ -124,15 +123,5 @@ public class UserServiceImpl implements UserService {
     private String generateSimpleToken() {
         // TODO: thay bằng JWT token khi tích hợp Spring Security
         return "token_" + UUID.randomUUID();
-=======
-import com.aismart.learning.service.base.UserService;
-import com.aismart.learning.dto.response.UserResponse;
-
-public class UserServiceImpl implements UserService {
-    @Override
-    public UserResponse register(String username, String password) {
-        // TODO: implement registration
-        return null;
->>>>>>> origin/develop
     }
 }

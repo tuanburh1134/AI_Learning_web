@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom'
 import LoginPage from './features/auth/pages/LoginPage'
@@ -359,14 +358,5 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
-=======
-import React from 'react'
-
-export default function App() {
-  return (
-    <div>
-      <h1>AI Learning Frontend (placeholder)</h1>
-    </div>
->>>>>>> origin/develop
   )
 }
