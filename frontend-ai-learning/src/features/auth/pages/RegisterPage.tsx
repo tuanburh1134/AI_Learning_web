@@ -241,3 +241,4 @@ const styles = {
     cursor: 'pointer'
   }
 }
+

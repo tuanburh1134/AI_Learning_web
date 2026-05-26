@@ -21,6 +21,12 @@ export default function LoginPage() {
   const handleGoogleSuccess = async (tokenResponse: { access_token: string }) => {
     try {
       setIsSubmitting(true)
+      // Lấy id_token từ access_token qua Google userinfo
+      const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+      })
+      if (!userInfoRes.ok) throw new Error('Không thể lấy thông tin Google')
+      const userInfo = await userInfoRes.json()
       const response = await AuthService.googleLogin(tokenResponse.access_token)
       setUser(response)
       navigate('/')
@@ -279,3 +285,4 @@ const styles = {
     fontFamily: 'inherit'
   } as const
 }
+

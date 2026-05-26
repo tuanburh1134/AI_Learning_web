@@ -13,7 +13,6 @@ export interface RegisterRequest {
 export interface AuthResponse {
   token: string
   userId: string
-  username: string
   fullName: string
   email: string
   grade?: string
@@ -21,7 +20,6 @@ export interface AuthResponse {
   currentLevel?: string
   goal?: string
   onboarded?: boolean
-  message?: string
 }
 
 export interface AuthFormErrors {
