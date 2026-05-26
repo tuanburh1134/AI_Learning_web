@@ -1,5 +1,6 @@
 package com.aismart.learning.entity;
 
+<<<<<<< HEAD
 import com.aismart.learning.constant.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -52,4 +53,15 @@ public class User {
     @Column(name = "onboarded")
     @Builder.Default
     private Boolean onboarded = false;
+=======
+import jakarta.persistence.*;
+
+@Entity
+public class User {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String username;
+    private String password;
+    private String fullName;
+>>>>>>> origin/develop
 }

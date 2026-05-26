@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
+=======
+>>>>>>> origin/develop
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+<<<<<<< HEAD
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -11,11 +15,14 @@
         <relativePath/>
     </parent>
 
+=======
+>>>>>>> origin/develop
     <groupId>com.aismart</groupId>
     <artifactId>backend-ai-learning</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>backend-ai-learning</name>
+<<<<<<< HEAD
 
     <properties>
         <java.version>21</java.version>
@@ -25,16 +32,27 @@
 
     <dependencies>
         <!-- Spring Web -->
+=======
+    <properties>
+        <java.version>17</java.version>
+        <spring.boot.version>3.1.0</spring.boot.version>
+    </properties>
+    <dependencies>
+>>>>>>> origin/develop
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+<<<<<<< HEAD
 
         <!-- Spring Data JPA -->
+=======
+>>>>>>> origin/develop
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+<<<<<<< HEAD
 
         <!-- Validation -->
         <dependency>
@@ -51,11 +69,14 @@
         </dependency>
 
         <!-- H2 (for local dev/test) -->
+=======
+>>>>>>> origin/develop
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+<<<<<<< HEAD
 
         <!-- Lombok -->
         <dependency>
@@ -87,11 +108,20 @@
         </dependency>
     </dependencies>
 
+=======
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.5.Final</version>
+        </dependency>
+    </dependencies>
+>>>>>>> origin/develop
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+<<<<<<< HEAD
                 <configuration>
                     <excludes>
                         <exclude>
@@ -126,6 +156,15 @@
                             <version>${mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
+=======
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+>>>>>>> origin/develop
                 </configuration>
             </plugin>
         </plugins>

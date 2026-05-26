@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom'
 import LoginPage from './features/auth/pages/LoginPage'
@@ -48,7 +49,7 @@ function HomePage() {
       <section style={styles.hero}>
         <div style={styles.heroContent}>
           <div style={styles.heroBadge}>Lớp 1-12</div>
-          <h1 style={styles.heroTitle}>Xây dựng kế hoạch học tập &amp; tạo đề kiểm tra AI trong 3 bước!</h1>
+          <h1 style={styles.heroTitle}>Xây dựng kế hoạch học tập & tạo đề kiểm tra AI trong 3 bước!</h1>
           <p style={styles.heroDescription}>
             Học sinh được cá nhân hóa lộ trình, luyện tập kiểm tra AI thông minh và nâng cao tiến độ học tập từng ngày.
           </p>
@@ -106,7 +107,7 @@ function HomePage() {
         </div>
         <div style={styles.featureCard}>
           <div style={styles.featureIcon}>📊</div>
-          <h3 style={styles.featureTitle}>Phân Tích &amp; Tiến Độ</h3>
+          <h3 style={styles.featureTitle}>Phân Tích & Tiến Độ</h3>
           <p style={styles.featureText}>Theo dõi tiến độ, điểm mạnh và cải thiện lộ trình học tập hiệu quả.</p>
         </div>
       </section>
@@ -247,13 +248,6 @@ const styles = {
     gap: 10,
     color: '#334155'
   },
-  quizField: {
-    padding: '10px 14px',
-    background: '#fff',
-    borderRadius: 10,
-    fontSize: 14,
-    color: '#1e293b'
-  },
   cardFooter: {
     color: '#64748b',
     marginTop: 18
@@ -365,5 +359,14 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
+=======
+import React from 'react'
+
+export default function App() {
+  return (
+    <div>
+      <h1>AI Learning Frontend (placeholder)</h1>
+    </div>
+>>>>>>> origin/develop
   )
 }
